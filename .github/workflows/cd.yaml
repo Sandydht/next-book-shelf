@@ -15,8 +15,7 @@ jobs:
       with:
         host: ec2-108-137-6-31.ap-southeast-3.compute.amazonaws.com
         username: ubuntu
-        key: ${{ secrets.SSH_KEY }}
-        port: |
+        key: 
           -----BEGIN RSA PRIVATE KEY-----
           MIIEogIBAAKCAQEA4QZhzTmDcRIeCv/nKfDqawyt2aymMo5+veuO7pzpNOOKdb9f
           QOTUHmowQGm/Ac/QlfqQ2dPZDWnvkKH431GsnkQSTbqx0X9o92GGYteySh3g4h3E
@@ -44,6 +43,7 @@ jobs:
           qTd+05/roe8fA61QrW0Fr2H5dPRaiQvi8j+PplBLqCXaeKzHyPxoFLrSYZP9aVEU
           iD8N4Fp2qheOfZpr5pYp8qpSg+45T3emima1iV4/jYkcfyZ9gk8=
           -----END RSA PRIVATE KEY-----
+        port: 22
         script: |
           echo "SSH connected"
           uptime
