@@ -12,7 +12,8 @@ export default function Page() {
     title: '',
     author: '',
     year: '',
-    isbn: ''
+    isbn: '',
+    is_read: false
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -22,7 +23,12 @@ export default function Page() {
       event.preventDefault();
 
       const response = await apiService.post('/book', formData);
-      console.log('response: ', response);
+      const responseStatusText = response.statusText;
+      const responseData = response.data;
+
+      if (responseStatusText == 'Created' && responseData) {
+        resetForm();
+      } 
     } catch (error) {
       console.log('error: ', error);
     } finally {
@@ -31,11 +37,21 @@ export default function Page() {
   }
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const { name, value, checked } = event.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: name == 'is_read' ? checked : value
     }));
+  }
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      author: '',
+      year: '',
+      isbn: '',
+      is_read: false
+    })
   }
 
   return (
@@ -86,7 +102,11 @@ export default function Page() {
               onChange={handleChangeInput}
             />
             <Checkbox
+              id="is_read"
+              name="is_read"
               label="Is Read"
+              isChecked={formData.is_read}
+              onChange={handleChangeInput}
             />
           </div>
           <div className="w-full h-auto flex flex-col items-start justify-start">
