@@ -4,6 +4,7 @@ import BookItem from "@/components/BookItem";
 import Button from "@/components/Button";
 import Checkbox from "@/components/Checkbox";
 import Input from "@/components/Input";
+import apiService from "@/utils/api-service";
 import React, { useState } from "react";
 
 export default function Page() {
@@ -15,11 +16,18 @@ export default function Page() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    setIsLoading(true);
-    event.preventDefault();
-    console.log('formData: ', formData);
-    setIsLoading(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    try {
+      setIsLoading(true);
+      event.preventDefault();
+
+      const response = await apiService.post('/book', formData);
+      console.log('response: ', response);
+    } catch (error) {
+      console.log('error: ', error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +108,7 @@ export default function Page() {
         </div>
 
         <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] bg-white">
-          <BookItem 
+          <BookItem
             title="Atomic Habits"
             author="James Clear"
             year="2018"
@@ -118,7 +126,7 @@ export default function Page() {
         </div>
 
         <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] bg-white">
-          <BookItem 
+          <BookItem
             title="Atomic Habits"
             author="James Clear"
             year="2018"
