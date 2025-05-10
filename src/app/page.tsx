@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 import Checkbox from "@/components/Checkbox";
 import Input from "@/components/Input";
 import apiService from "@/utils/api-service";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -16,6 +16,22 @@ export default function Page() {
     is_read: false
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [readBookList, setReadBookList] = useState<{
+    id: string;
+    title: string;
+    author: string;
+    year: string;
+    isbn: string;
+    is_read: boolean;
+  }[]>([]);
+  const [unreadBookList, setUnreadBookList] = useState<{
+    id: string;
+    title: string;
+    author: string;
+    year: string;
+    isbn: string;
+    is_read: boolean;
+  }[]>([]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -27,12 +43,14 @@ export default function Page() {
       const responseData = response.data;
 
       if (responseStatusText == 'Created' && responseData) {
-        resetForm();
-      } 
+        resetFormData();
+      }
     } catch (error) {
       console.log('error: ', error);
     } finally {
       setIsLoading(false);
+      getReadBookList();
+      getUnreadBookList();
     }
   }
 
@@ -44,7 +62,7 @@ export default function Page() {
     }));
   }
 
-  const resetForm = () => {
+  const resetFormData = () => {
     setFormData({
       title: '',
       author: '',
@@ -52,6 +70,41 @@ export default function Page() {
       isbn: '',
       is_read: false
     })
+  }
+
+  useEffect(() => {
+    getReadBookList();
+    getUnreadBookList();
+  }, [])
+
+  const getReadBookList = async () => {
+    const response = await apiService.get('/book', {
+      params: {
+        is_read: true
+      }
+    });
+
+    const responseStatusText = response.statusText;
+    const responseData = response.data?.data;
+
+    if (responseStatusText == 'OK' && responseData) {
+      setReadBookList(responseData);
+    }
+  }
+
+  const getUnreadBookList = async () => {
+    const response = await apiService.get('/book', {
+      params: {
+        is_read: false
+      }
+    });
+
+    const responseStatusText = response.statusText;
+    const responseData = response.data?.data;
+
+    if (responseStatusText == 'OK' && responseData) {
+      setUnreadBookList(responseData);
+    }
   }
 
   return (
@@ -127,13 +180,16 @@ export default function Page() {
           </p>
         </div>
 
-        <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] bg-white">
-          <BookItem
-            title="Atomic Habits"
-            author="James Clear"
-            year="2018"
-            isbn="978-602-06-3318-3"
-          />
+        <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] bg-white max-h-[500px] overflow-y-auto">
+          {readBookList?.map((book) => (
+            <BookItem
+              key={book.id}
+              title={book.title}
+              author={book.author}
+              year={book.year}
+              isbn={book.isbn}
+            />
+          ))}
         </div>
       </div>
 
@@ -145,13 +201,16 @@ export default function Page() {
           </p>
         </div>
 
-        <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] bg-white">
-          <BookItem
-            title="Atomic Habits"
-            author="James Clear"
-            year="2018"
-            isbn="978-602-06-3318-3"
-          />
+        <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] bg-white max-h-[500px] overflow-y-auto">
+          {unreadBookList?.map((book) => (
+            <BookItem
+              key={book.id}
+              title={book.title}
+              author={book.author}
+              year={book.year}
+              isbn={book.isbn}
+            />
+          ))}
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ interface ComponentProps {
 
 export default function BookItem({ title, author, year, isbn, onDelete, onEdit }: ComponentProps) {
   return (
-    <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] border-[1px] border-gray-400 rounded-[8px] bg-white overflow-hidden">
+    <div className="w-full h-auto flex flex-col items-start justify-start gap-[24px] p-[25px] border-[1px] border-gray-400 rounded-[8px] bg-white">
       <div className="w-full h-auto flex flex-col items-start justify-start gap-[8px]">
         <div className='w-full h-auto'>
           <p className='text-left text-[16px] leading-[24px] text-black font-bold'>
