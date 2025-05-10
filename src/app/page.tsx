@@ -273,6 +273,19 @@ export default function Page() {
     }
   }, [snackbarData?.show])
 
+  const handleCancelEditBookData = () => {
+    setIsEdit(false);
+    resetFormData();
+    setSelectedBook({
+      id: '',
+      title: '',
+      author: '',
+      year: '',
+      isbn: '',
+      is_read: false
+    });
+  }
+
   return (
     <>
       {snackbarData?.show && (
@@ -345,12 +358,20 @@ export default function Page() {
                 onChange={handleChangeInput}
               />
             </div>
-            <div className="w-full h-auto flex flex-col items-start justify-start">
+            <div className="w-full h-auto flex flex-col items-start justify-start gap-[8px]">
               <Button
                 label="Submit"
                 htmlType="submit"
                 isLoading={isLoading}
               />
+              {isEdit && (
+                <Button
+                  type="outline-primary"
+                  label="Cancel"
+                  htmlType="button"
+                  onClick={handleCancelEditBookData}
+                />
+              )}
             </div>
           </form>
         </div>
