@@ -235,6 +235,11 @@ export default function Page() {
 
       if (responseStatusText) {
         handleCancelDelete();
+        setSnackbarData({
+          show: true,
+          type: 'success',
+          message: 'Book data has been successfully deleted!'
+        })
       }
     } catch (error) {
       setSnackbarData({
