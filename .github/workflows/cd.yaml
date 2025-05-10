@@ -45,5 +45,9 @@ jobs:
           -----END RSA PRIVATE KEY-----
         port: 22
         script: |
-          echo "SSH connected"
-          uptime
+          cd ~/project-belajar/next-book-shelf
+          git pull origin master
+          npm install
+          npx prisma migrate dev
+          pm2 restart next-book-shelf
+          
