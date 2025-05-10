@@ -1,11 +1,7 @@
 import { bookValidatorSchema } from '@/lib/zod/book-validator';
-import { badRequest } from '@/utils/error-handler';
-import { NextRequest, NextResponse } from 'next/server';
+import { badRequest, createdHandler, successHandler } from '@/utils/api-response-handler';
+import { NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
-
-type DynamicBookQuery = {
-  [key: string]: string | number; // allows adding new fields
-};
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -26,16 +22,11 @@ export async function POST(req: NextRequest) {
       isbn: validatedInput.data.isbn,
       is_read: validatedInput.data.is_read
     }
-  });
+  })
 
-  return NextResponse.json({
+  return createdHandler({
     status: 'OK',
     data: newBook
-  }, {
-    status: 201,
-    headers: {
-      'Content-Type': 'application/json'
-    }
   })
 }
 
@@ -45,7 +36,6 @@ export async function GET(req: NextRequest) {
   const isRead = searchParams.get('is_read');
 
   const query = {};
-  console.log('title: ', title);
 
   if (title && title !== undefined) {
     Object(query).title = title;
@@ -62,13 +52,8 @@ export async function GET(req: NextRequest) {
     }
   });
 
-  return NextResponse.json({
+  return successHandler({
     status: 'OK',
     data: book
-  }, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json'
-    }
   })
 }

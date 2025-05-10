@@ -32,25 +32,52 @@ export default function Page() {
     isbn: string;
     is_read: boolean;
   }[]>([]);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [selectedBook, setSelectedBook] = useState<{
+    id: string;
+    title: string;
+    author: string;
+    year: string;
+    isbn: string;
+    is_read: boolean;
+  } | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
-      setIsLoading(true);
       event.preventDefault();
-
-      const response = await apiService.post('/book', formData);
-      const responseStatusText = response.statusText;
-      const responseData = response.data;
-
-      if (responseStatusText == 'Created' && responseData) {
-        resetFormData();
+      setIsLoading(true);
+      if (isEdit) {
+        await handleEditBookData();
+      } else {
+        await handleCreateBookData();
       }
     } catch (error) {
-      console.log('error: ', error);
+      console.error('error: ', error);
     } finally {
       setIsLoading(false);
+      setIsEdit(false);
       getReadBookList();
       getUnreadBookList();
+    }
+  }
+
+  const handleCreateBookData = async () => {
+    const response = await apiService.post('/book', formData);
+    const responseStatusText = response.statusText;
+    const responseData = response.data;
+
+    if (responseStatusText == 'Created' && responseData) {
+      resetFormData();
+    }
+  }
+
+  const handleEditBookData = async () => {
+    const response = await apiService.patch(`/book/${selectedBook?.id}`, formData);
+    const responseStatusText = response.statusText;
+    const responseData = response.data;
+
+    if (responseStatusText == 'OK' && responseData) {
+      resetFormData();
     }
   }
 
@@ -106,6 +133,36 @@ export default function Page() {
       setUnreadBookList(responseData);
     }
   }
+
+  const handleSelectBook = async (id: string, event: string) => {
+    try {
+      const response = await apiService.get(`/book/${id}`);
+
+      const responseStatusText = response.statusText;
+      const responseData = response.data?.data;
+
+      if (responseStatusText == 'OK' && responseData) {
+        setSelectedBook(responseData);
+        setIsEdit(event == 'edit' ? true : false);
+      }
+    } catch (error) {
+      console.error('error: ', error);
+    }
+  }
+
+  useEffect(() => {
+    if (isEdit && selectedBook != null) {
+      setFormData({
+        title: selectedBook.title,
+        author: selectedBook.author,
+        year: selectedBook.year,
+        isbn: selectedBook.isbn,
+        is_read: selectedBook.is_read
+      })
+    } else {
+      resetFormData();
+    }
+  }, [isEdit, selectedBook])
 
   return (
     <div className="w-full h-auto max-w-[728px] mx-auto flex flex-col items-start justify-start p-[25px] gap-[24px]">
@@ -184,10 +241,13 @@ export default function Page() {
           {readBookList?.map((book) => (
             <BookItem
               key={book.id}
+              id={book.id}
               title={book.title}
               author={book.author}
               year={book.year}
               isbn={book.isbn}
+              onEdit={(id) => handleSelectBook(id, 'edit')}
+              onDelete={(id) => handleSelectBook(id, 'delete')}
             />
           ))}
         </div>
@@ -205,10 +265,13 @@ export default function Page() {
           {unreadBookList?.map((book) => (
             <BookItem
               key={book.id}
+              id={book.id}
               title={book.title}
               author={book.author}
               year={book.year}
               isbn={book.isbn}
+              onEdit={(id) => handleSelectBook(id, 'edit')}
+              onDelete={(id) => handleSelectBook(id, 'delete')}
             />
           ))}
         </div>
