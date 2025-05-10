@@ -3,8 +3,9 @@ import prisma from "@/lib/prisma";
 import { badRequest, notFound, successHandler } from "@/utils/api-response-handler";
 import { bookValidatorSchema } from "@/lib/zod/book-validator";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(req: NextRequest, context: { params: any }) {
+  const id = context.params.id;
   const findBook = await prisma.book.findFirst({
     where: {
       id: Number(id)
@@ -24,8 +25,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   })
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function PATCH(req: NextRequest, context: { params: any }) {
+  const id = context.params.id;
   const findBook = await prisma.book.findFirst({
     where: {
       id: Number(id)
@@ -67,8 +69,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   })
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function DELETE(req: NextRequest, context: { params: any }) {
+  const id = context.params.id;
   const findBook = await prisma.book.findFirst({
     where: {
       id: Number(id)

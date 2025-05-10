@@ -67,7 +67,7 @@ export default function Page() {
       setSnackbarData({
         show: true,
         type: 'error',
-        message: 'Failed to save book data!'
+        message: String(error)
       })
     } finally {
       setIsLoading(false);
@@ -199,7 +199,7 @@ export default function Page() {
       setSnackbarData({
         show: true,
         type: 'error',
-        message: 'Failed to get book data!'
+        message: String(error)
       })
     }
   }
@@ -245,7 +245,7 @@ export default function Page() {
       setSnackbarData({
         show: true,
         type: 'error',
-        message: 'Failed to delete book data!'
+        message: String(error)
       })
     } finally {
       getReadBookList();
