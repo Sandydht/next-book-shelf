@@ -15,7 +15,7 @@ jobs:
       with:
         host: ec2-108-137-6-31.ap-southeast-3.compute.amazonaws.com
         username: ubuntu
-        key: 
+        key: |
           -----BEGIN RSA PRIVATE KEY-----
           MIIEogIBAAKCAQEA4QZhzTmDcRIeCv/nKfDqawyt2aymMo5+veuO7pzpNOOKdb9f
           QOTUHmowQGm/Ac/QlfqQ2dPZDWnvkKH431GsnkQSTbqx0X9o92GGYteySh3g4h3E
