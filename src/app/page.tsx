@@ -5,6 +5,7 @@ import Button from "@/components/Button";
 import Checkbox from "@/components/Checkbox";
 import ConfirmModalBox from "@/components/ConfirmModalBox";
 import Input from "@/components/Input";
+import Snackbar from "@/components/Snackbar";
 import apiService from "@/utils/api-service";
 import React, { useEffect, useState } from "react";
 
@@ -47,6 +48,11 @@ export default function Page() {
     title: string;
     description: string;
   }>()
+  const [snackbarData, setSnackbarData] = useState<{
+    show: boolean;
+    type: 'success' | 'error';
+    message: string;
+  }>()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -58,7 +64,11 @@ export default function Page() {
         await handleCreateBookData();
       }
     } catch (error) {
-      console.error('error: ', error);
+      setSnackbarData({
+        show: true,
+        type: 'error',
+        message: 'Failed to save book data!'
+      })
     } finally {
       setIsLoading(false);
       setIsEdit(false);
@@ -68,22 +78,40 @@ export default function Page() {
   }
 
   const handleCreateBookData = async () => {
-    const response = await apiService.post('/book', formData);
-    const responseStatusText = response.statusText;
-    const responseData = response.data;
+    try {
+      const response = await apiService.post('/book', formData);
+      const responseStatusText = response.statusText;
+      const responseData = response.data;
 
-    if (responseStatusText == 'Created' && responseData) {
-      resetFormData();
+      if (responseStatusText == 'Created' && responseData) {
+        resetFormData();
+        setSnackbarData({
+          show: true,
+          type: 'success',
+          message: 'The book data has been successfully created!'
+        })
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
   const handleEditBookData = async () => {
-    const response = await apiService.patch(`/book/${selectedBook?.id}`, formData);
-    const responseStatusText = response.statusText;
-    const responseData = response.data;
+    try {
+      const response = await apiService.patch(`/book/${selectedBook?.id}`, formData);
+      const responseStatusText = response.statusText;
+      const responseData = response.data;
 
-    if (responseStatusText == 'OK' && responseData) {
-      resetFormData();
+      if (responseStatusText == 'OK' && responseData) {
+        resetFormData();
+        setSnackbarData({
+          show: true,
+          type: 'success',
+          message: 'Book data updated successfully!'
+        })
+      }
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -111,32 +139,40 @@ export default function Page() {
   }, [])
 
   const getReadBookList = async () => {
-    const response = await apiService.get('/book', {
-      params: {
-        is_read: true
+    try {
+      const response = await apiService.get('/book', {
+        params: {
+          is_read: true
+        }
+      });
+
+      const responseStatusText = response.statusText;
+      const responseData = response.data?.data;
+
+      if (responseStatusText == 'OK' && responseData) {
+        setReadBookList(responseData);
       }
-    });
-
-    const responseStatusText = response.statusText;
-    const responseData = response.data?.data;
-
-    if (responseStatusText == 'OK' && responseData) {
-      setReadBookList(responseData);
+    } catch (error) {
+      throw error;
     }
   }
 
   const getUnreadBookList = async () => {
-    const response = await apiService.get('/book', {
-      params: {
-        is_read: false
+    try {
+      const response = await apiService.get('/book', {
+        params: {
+          is_read: false
+        }
+      });
+
+      const responseStatusText = response.statusText;
+      const responseData = response.data?.data;
+
+      if (responseStatusText == 'OK' && responseData) {
+        setUnreadBookList(responseData);
       }
-    });
-
-    const responseStatusText = response.statusText;
-    const responseData = response.data?.data;
-
-    if (responseStatusText == 'OK' && responseData) {
-      setUnreadBookList(responseData);
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -160,7 +196,11 @@ export default function Page() {
         }
       }
     } catch (error) {
-      console.error('error: ', error);
+      setSnackbarData({
+        show: true,
+        type: 'error',
+        message: 'Failed to get book data!'
+      })
     }
   }
 
@@ -197,15 +237,46 @@ export default function Page() {
         handleCancelDelete();
       }
     } catch (error) {
-      console.error('error: ', error);
+      setSnackbarData({
+        show: true,
+        type: 'error',
+        message: 'Failed to delete book data!'
+      })
     } finally {
       getReadBookList();
       getUnreadBookList();
     }
   }
 
+  useEffect(() => {
+    if (confirmModalBox?.show) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [confirmModalBox?.show])
+
+  useEffect(() => {
+    if (snackbarData?.show) {
+      setTimeout(() => {
+        setSnackbarData({
+          show: false,
+          type: 'success',
+          message: ''
+        })
+      }, 3000);
+    }
+  }, [snackbarData?.show])
+
   return (
     <>
+      {snackbarData?.show && (
+        <Snackbar
+          type={snackbarData.type}
+          message={snackbarData.message}
+        />
+      )}
+
       {confirmModalBox?.show && (
         <ConfirmModalBox
           title={confirmModalBox.title}

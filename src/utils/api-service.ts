@@ -13,7 +13,7 @@ apiService.interceptors.response.use(
   },
   (error) => {
     if (axios.isAxiosError(error)) {
-      return error.response?.data;
+      return Promise.reject(error.response?.data); 
     }
 
     return Promise.reject(error); 
