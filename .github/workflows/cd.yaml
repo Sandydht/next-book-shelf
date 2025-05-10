@@ -49,5 +49,6 @@ jobs:
           git pull origin master
           npm install
           npx prisma migrate dev
+          npm run build
           pm2 restart next-book-shelf
           
