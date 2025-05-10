@@ -17,9 +17,3 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
-        script: |
-          cd ~/project-belajar/next-book-shelf
-          git pull origin master
-          npm install
-          npx prisma migrate dev
-          pm2 restart next-book-shelf
