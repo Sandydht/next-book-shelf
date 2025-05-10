@@ -11,9 +11,9 @@ jobs:
  
     steps:
     - name: SSH and deploy app
-      uses: appleboy/ssh-action@v1
+      uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
+        host: ec2-108-137-6-31.ap-southeast-3.compute.amazonaws.com
+        username: ubuntu
         key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.PORT }}
+        port: 22
