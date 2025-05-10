@@ -13,37 +13,10 @@ jobs:
     - name: SSH and deploy app
       uses: appleboy/ssh-action@v0.1.10
       with:
-        host: ec2-108-137-6-31.ap-southeast-3.compute.amazonaws.com
-        username: ubuntu
-        key: |
-          -----BEGIN RSA PRIVATE KEY-----
-          MIIEogIBAAKCAQEA4QZhzTmDcRIeCv/nKfDqawyt2aymMo5+veuO7pzpNOOKdb9f
-          QOTUHmowQGm/Ac/QlfqQ2dPZDWnvkKH431GsnkQSTbqx0X9o92GGYteySh3g4h3E
-          TgOloAgXFQ2v+7J5/pctekvR8Zb/ZzpcskNdQLUn28mejjOUQYRhTS4VNXcjHOTc
-          lGah96VTjtXROaQ86Om5YSSnukWCbyOid4S8Yc+L9nUAbC7AowQHq3m91yyFNHpQ
-          /TCFYFBB4oTIE3WTiiN2nzII8xm3dIpxiG0xJMVK6ZKUthX3u0rykk1TYL3x7V2K
-          PWOPJXpTcGEz/BwkZeVUY9fv1Bxjt5he8emwywIDAQABAoIBAQCdFq557TeUXNh6
-          R1FiFxwe5TgMaJmRW6ahAOvEKegnkt1a++EMVXK7VNggb3H3WtM7kDNEzb6NvbGP
-          H3O0uritt8mrV7TBEpf9cqi1Ie0GDruqPquG5sbd5Cfw+6AqLts5XuJRqNKEPCxK
-          LRT/IUXdYVnU9nhovxs1bavbjFsj+Zsrh1fpw70ZLIXDvS++roDSDqeZEqAgdW0M
-          K/GF5Tb4BmavW3WuLHgvpcxKJZAc1ypQ/NKTfhtra+7njsF2gAoNWP6k3yYS9hnM
-          HptwEdeRW9+LFrd+l+2ZSfcY7DUSVP2QBtnFDw9nLCorOECzNMwhAGseQm13zJPA
-          fmez6ptBAoGBAPrRWrYp6Nba6KKeFkuDjqxM+HQ2wZkclxR/X5XPlN/ZIhnZGP3D
-          q+9dLJcohITE8f1XSjdkx6I2COM3fqd+hQ1ICPlWWZrYr5eMUmoyxVD87oguZ2kV
-          uFScj2DsZ8u84yboqnv8fr4PtDivocnwxt8SrYNNyppJVpO2dQrCNDgrAoGBAOWs
-          mh3+gAP9tk0rzDuLJ3TdDgFJu1HKHibujqc6J5Og8uHL92RL2Tzw3kh8ua9vsFZu
-          tZ3mOmrMGU5GrRBAr2l75MLqcHAbEuc6nyJIy7SmQXZAgKN1Qt9wOmOQZw39oOzG
-          pJkYZP2Lr00IMFOPF+Fw2Ukcjn27u657OydGaHnhAoGAdm4eF/+n+rN4vzhILLXc
-          y0y40B7+wO44BCy0lIdks2HScUQKQeB/sdFb+a/fCtX3sXjjCU7j2JsNDUSp4Cqk
-          ZoYJ/rmgK7Z/Ct7uF0kL1FbpxpGqsHraA9G8/bYCuLfixf98aHjr25CMt2tuyGyR
-          asll9qbnsHxKjgrMLx1ODOsCf0bf/K9E2jxhDuDBo0S8rHBjxu6e0i9rL+LTuzHf
-          wFbOVCVZy/4naeJkcjPsSWDaFpCVmXYgleZfFXASX1WkoHzsvqtnrUrrD+pLLNBn
-          pnUY2RqkzQ2kIf7RozMWXLb0jbSDmEemP4P+lxoubLtcbQIk0Oi+5znltQUjAh4c
-          nCECgYEA2AEEGan9eiYqBIMkDAl2aLeSIte7GD8OiNxiWGGWFu+BmOc2xVZcv84d
-          qTd+05/roe8fA61QrW0Fr2H5dPRaiQvi8j+PplBLqCXaeKzHyPxoFLrSYZP9aVEU
-          iD8N4Fp2qheOfZpr5pYp8qpSg+45T3emima1iV4/jYkcfyZ9gk8=
-          -----END RSA PRIVATE KEY-----
-        port: 22
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
         script: |
           cd ~/project-belajar/next-book-shelf
           git pull origin master
